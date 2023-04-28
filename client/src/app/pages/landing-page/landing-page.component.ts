@@ -1,10 +1,79 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css']
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
+  login: boolean = false
 
+  googleUser:any
+  googleLoggedIn:any
+
+  constructor(private authService: AuthService, private router: Router, private googleService: SocialAuthService) {}
+
+  userData = new FormGroup({
+    username: new FormControl('', [Validators.minLength(4)]),
+    firstname: new FormControl('', [Validators.minLength(4)]),
+    lastname: new FormControl('', [Validators.minLength(4)]),
+    email: new FormControl('', [Validators.email]),
+    password: new FormControl('', [Validators.minLength(4)]),
+    confirmPassword: new FormControl('', [Validators.minLength(4)]),
+  })
+
+  setLogin() {
+    this.login = !this.login
+  }
+
+  signUp() {
+    if(this.userData.status === "VALID") {
+      this.authService.signUp(this.userData.value)
+    .subscribe(
+      res => {
+        console.log(res)
+        localStorage.setItem('user', JSON.stringify(res))
+        this.router.navigate(['/home'])
+      },
+      err => console.log(err.error)
+    )
+    } else {
+      console.log('Errors', this.userData.errors)
+    }
+  }
+
+  signIn() {
+    if(this.userData.status === "VALID") {
+      this.authService.signIn(this.userData.value)
+    .subscribe(
+      res => {
+        console.log(res)
+        localStorage.setItem('user', JSON.stringify(res))
+        this.router.navigate(['/home'])
+      },
+      err => console.log(err.error)
+    )
+    } else {
+      console.log('Errors', this.userData.errors)
+    }
+  }
+
+  ngOnInit() {
+    this.googleService.authState.subscribe((user) => {
+      this.googleUser = user
+      this.googleLoggedIn = (user != null)
+      this.authService.signGoogle(this.googleUser).subscribe(
+        res => {
+          console.log(res)
+          localStorage.setItem('user', JSON.stringify(res))
+          this.router.navigate(['/home'])
+        },
+        err => console.log(err.error)
+      )
+    })
+  }
 }
