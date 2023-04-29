@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-landing-page',
@@ -18,12 +19,12 @@ export class LandingPageComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private googleService: SocialAuthService) {}
 
   userData = new FormGroup({
-    username: new FormControl('', [Validators.minLength(4)]),
-    firstname: new FormControl('', [Validators.minLength(4)]),
-    lastname: new FormControl('', [Validators.minLength(4)]),
+    username: new FormControl(''/* , [Validators.minLength(4)] */),
+    firstname: new FormControl(''/* , [Validators.minLength(4)] */),
+    lastname: new FormControl(''/* , [Validators.minLength(4)] */),
     email: new FormControl('', [Validators.email]),
-    password: new FormControl('', [Validators.minLength(4)]),
-    confirmPassword: new FormControl('', [Validators.minLength(4)]),
+    password: new FormControl(''/* , [Validators.minLength(4)] */),
+    confirmPassword: new FormControl(''/* , [Validators.minLength(4)] */),
   })
 
   setLogin() {
@@ -35,11 +36,16 @@ export class LandingPageComponent implements OnInit {
       this.authService.signUp(this.userData.value)
     .subscribe(
       res => {
-        console.log(res)
+        console.log('res', res)
         localStorage.setItem('user', JSON.stringify(res))
         this.router.navigate(['/home'])
       },
-      err => console.log(err.error)
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
     )
     } else {
       console.log('Errors', this.userData.errors)
@@ -55,7 +61,12 @@ export class LandingPageComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(res))
         this.router.navigate(['/home'])
       },
-      err => console.log(err.error)
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
     )
     } else {
       console.log('Errors', this.userData.errors)
@@ -72,7 +83,12 @@ export class LandingPageComponent implements OnInit {
           localStorage.setItem('user', JSON.stringify(res))
           this.router.navigate(['/home'])
         },
-        err => console.log(err.error)
+        err => Swal.fire({
+          title: "Error",
+          text: err.error.message,
+          icon: "error",
+          timer: 2000,
+      })
       )
     })
   }
