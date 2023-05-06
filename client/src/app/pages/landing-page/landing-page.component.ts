@@ -22,7 +22,7 @@ export class LandingPageComponent implements OnInit {
     username: new FormControl(''/* , [Validators.minLength(4)] */),
     firstname: new FormControl(''/* , [Validators.minLength(4)] */),
     lastname: new FormControl(''/* , [Validators.minLength(4)] */),
-    email: new FormControl('', [Validators.email]),
+    email: new FormControl('', /* [Validators.email] */),
     password: new FormControl(''/* , [Validators.minLength(4)] */),
     confirmPassword: new FormControl(''/* , [Validators.minLength(4)] */),
   })

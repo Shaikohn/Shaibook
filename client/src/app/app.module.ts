@@ -9,10 +9,11 @@ import { HttpClientModule } from '@angular/common/http'
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
-  FacebookLoginProvider
 } from '@abacritt/angularx-social-login';
 import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from './guards/auth.guard';
+import { PostComponent } from './components/post/post.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,8 @@ import { AuthGuard } from './guards/auth.guard';
     LandingPageComponent,
     NavbarComponent,
     HomeComponent,
+    PostComponent,
+    ProfileComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, SocialLoginModule, GoogleSigninButtonModule],
   providers: [AuthGuard,

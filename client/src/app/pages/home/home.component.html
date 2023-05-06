@@ -1,2 +1,62 @@
 <app-navbar></app-navbar>
-<p>home works!</p>
+<form [formGroup]="postData" (submit)="addPost()" class="flex flex-row justify-center items-center bg-blue-950 text-yellow-50 pt-2">
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full px-3">
+      <label class="block uppercase tracking-wid text-xs font-bold mb-2">
+        Text
+      </label>
+      <input class="appearance-none block w-full text-gray-500 bg-gray-20 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Text" formControlName="text">
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-3 mb-6">
+    <div class="w-full px-3">
+      <label class="block uppercase tracking-wid text-xs font-bold mb-2">
+        Photos
+      </label>
+      <input class="appearance-none block w-full text-gray-500 bg-gray-20 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Photos" formControlName="photos">
+    </div>
+  </div>
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full ms-2" type="submit">Submit</button>
+</form>
+<div *ngFor="let p of posts" class="flex justify-center items-center mt-4">
+  <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">
+    <div class="px-6 py-4">
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="deletePost(p.userId, p._id)">Delete</button>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="setEditing(p)">Edit</button>
+      <div class="font-bold text-xl mb-2"> {{p.username}} </div>
+        <p class="text-gray-700 text-base">
+        {{p.text}}
+        </p>
+    </div>
+    <div *ngFor="let photo of p.photos">
+      <img class="w-full" [src]="photo" alt="photos">
+    </div>
+  </div>
+  <section class="modal" [ngClass]="{'is-open': editing === true}">
+    <div class='modal-container'>
+      <h1>EDIT YOUR POST</h1>
+      <form *ngIf="editing === true" [formGroup]="editPostData" (submit)="editPost()" class="w-full max-w-lg">
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+              Text
+            </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Leave empty if you want it to stay the same" type="text" formControlName="text">
+            {{post.text}}
+          </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+              Photos
+            </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Leave empty if you want it to stay the same" type="text" formControlName="photos">
+            {{post.photos}}
+          </div>
+        </div>
+        <button style="margin-left: 60px" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
+      </form>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setEditing(p)">Cancel</button>
+    </div>
+  </section>
+</div>
