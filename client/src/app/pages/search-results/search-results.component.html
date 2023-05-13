@@ -1,0 +1,5 @@
+<app-navbar></app-navbar>
+<div *ngFor="let u of users" class="flex justify-center items-center mt-4">
+  <p>{{u.name}}</p>
+  <button (click)="seeProfile(u._id)">See profile</button>
+</div>

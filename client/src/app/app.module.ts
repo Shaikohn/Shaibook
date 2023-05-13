@@ -14,6 +14,8 @@ import { HomeComponent } from './pages/home/home.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { SearchResultsComponent } from './pages/search-results/search-results.component';
+import { SearchedUserComponent } from './pages/searched-user/searched-user.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     HomeComponent,
     PostComponent,
     ProfileComponent,
+    SearchResultsComponent,
+    SearchedUserComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, SocialLoginModule, GoogleSigninButtonModule],
   providers: [AuthGuard,

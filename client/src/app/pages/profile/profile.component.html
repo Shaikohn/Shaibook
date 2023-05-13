@@ -6,7 +6,15 @@
   Name: {{user.name}}
   <br>
   Email: {{user.email}}
+  <br>
+  Privacity: {{user.public ? "Public" : "Private"}}
+  <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="editPrivacity()">Privacity</button>
   <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="setEditing()">Edit</button>
+</div>
+<div *ngFor="let f of user.followRequests">
+  {{f.username}}
+  <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" (click)="acceptFollowRequest(f._id)">Accept</button>
+  <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Reject</button>
 </div>
 <div *ngFor="let p of user.posts" class="flex justify-center items-center mt-4">
   <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">

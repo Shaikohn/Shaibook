@@ -18,12 +18,15 @@ export class HomeComponent implements OnInit {
 
   posts:Post[] = []
   post:any
+  user:any = {}
 
   ngOnInit(): void {
-    this.postService.getPosts()
+    this.user = JSON.parse(localStorage.getItem('user')!)
+    this.postService.getPosts(this.user.result._id)
     .subscribe(
       res => {
         this.posts = [...this.posts, ...res]
+        console.log(this.posts)
       },
       err => Swal.fire({
         title: "Error",

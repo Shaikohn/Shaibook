@@ -12,8 +12,8 @@ export class PostService {
 
   private postUrl = 'http://localhost:3001/post'
 
-  getPosts() {
-    return this.http.get<Post[]>(this.postUrl + '/seePosts')
+  getPosts(_id:string) {
+    return this.http.get<Post[]>(this.postUrl + `/seePosts/${_id}`)
   }
 
   addPost(postData: object) {

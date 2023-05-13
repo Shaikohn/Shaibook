@@ -1,0 +1,41 @@
+<app-navbar></app-navbar>
+<ng-container *ngTemplateOutlet="user.public || follower ? Public : Private">
+
+</ng-container>
+
+<ng-template #Public>
+  <div class="flex flex-row justify-center items-center bg-red-200 m-auto">
+    <img style="border-radius: 50px; height: 100px; margin-right: 10px; padding: 10px; width: 100px;" [src]="user.picture" alt="{{user.name}}" referrerpolicy="no-referrer">
+    Username: {{user.username}}
+    <br>
+    Name: {{user.name}}
+    <br>
+    Email: {{user.email}}
+    <br>
+    <button *ngIf="!follower" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="followUser()">Seguir</button>
+    <button (click)="unfollowUser()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" *ngIf="follower">Dejar de seguir</button>
+  </div>
+  <div *ngFor="let p of user.posts" class="flex justify-center items-center mt-4">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2"> {{p.username}} </div>
+          <p class="text-gray-700 text-base">
+          {{p.text}}
+          </p>
+      </div>
+      <div *ngFor="let photo of p.photos">
+        <img class="w-full" [src]="photo" alt="photos">
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #Private>
+  <div class="flex flex-row justify-center items-center bg-red-200 m-auto">
+    <img style="border-radius: 50px; height: 100px; margin-right: 10px; padding: 10px; width: 100px;" [src]="user.picture" alt="{{user.name}}" referrerpolicy="no-referrer">
+    Username: {{user.username}}
+  </div>
+  <h1>Cuenta privada</h1>
+  <button *ngIf="!pendingFollowRequest" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="followUser()">Seguir</button>
+  <p *ngIf="pendingFollowRequest">Esperando respuesta</p>
+</ng-template>

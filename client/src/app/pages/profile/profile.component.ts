@@ -31,6 +31,7 @@ export class ProfileComponent implements OnInit {
     .subscribe(
       res => {
         this.user = res
+        console.log(this.user)
       },
       err => console.log(err)
     )
@@ -58,6 +59,32 @@ export class ProfileComponent implements OnInit {
         icon: "error",
         timer: 2000,
     })
+    )
+  }
+
+  editPrivacity() {
+    this.profileService.editPrivacity(this.user._id)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  acceptFollowRequest(userId: string) {
+    const _id = this.user._id
+    this.profileService.acceptFollowRequest(_id, userId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => console.log(err)
     )
   }
 }
