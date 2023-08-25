@@ -77,4 +77,34 @@ export class GroupPageComponent {
     })
     )
   }
+
+  editPrivacity() {
+    this.groupService.editPrivacity(this.groupID)
+    .subscribe(
+      res => {
+        this.getGroup()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteGroup() {
+    this.groupService.deleteGroup(this.groupID)
+    .subscribe(
+      res => {
+        console.log('res', res)
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
 }
