@@ -24,6 +24,12 @@ export class GroupPageComponent {
     photos: new FormControl(''),
   })
 
+  groupData = new FormGroup({
+    name: new FormControl(''),
+    description: new FormControl(''),
+    photo: new FormControl(''),
+  })
+
   getGroup() {
     this.route.params.subscribe(params => {
       this.groupID = params });
@@ -45,6 +51,23 @@ export class GroupPageComponent {
     .subscribe(
       res => {
         console.log('res', res)
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  editGroup() {
+      this.groupData.value.name = this.group.name
+      this.groupData.value.photo = this.group.photo
+      this.groupService.editGroup(this.groupID, this.groupData.value)
+    .subscribe(
+      res => {
+        localStorage.setItem('user', JSON.stringify(res))
       },
       err => Swal.fire({
         title: "Error",
