@@ -34,8 +34,8 @@ export class GroupService {
     return this.http.patch<Group[]>(this.groupUrl + `/privacity/${_id}`, null)
   }
 
-  deleteGroupPost(userId: string, _id: string) {
-    return this.http.delete<Group[]>(this.groupUrl + `/delete/${userId}/${_id}`)
+  deleteGroupPost(postId: string,userId: string, groupId: string) {
+    return this.http.delete<Group[]>(this.groupUrl + `/delete/${groupId}/${userId}/${postId}`)
   }
   deleteGroup(_id: string) {
     return this.http.delete<Group[]>(this.groupUrl + `/delete/${_id}`)

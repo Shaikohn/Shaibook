@@ -93,6 +93,21 @@ export class GroupPageComponent {
     )
   }
 
+  deleteGroupPost(userID:string, postID:string) {
+    this.groupService.deleteGroupPost(this.groupID, userID, postID)
+    .subscribe(
+      res => {
+        console.log('res', res)
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
   deleteGroup() {
     this.groupService.deleteGroup(this.groupID)
     .subscribe(
