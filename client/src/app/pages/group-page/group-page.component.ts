@@ -67,7 +67,7 @@ export class GroupPageComponent {
       this.groupService.editGroup(this.groupID, this.groupData.value)
     .subscribe(
       res => {
-        localStorage.setItem('user', JSON.stringify(res))
+        this.group = res
       },
       err => Swal.fire({
         title: "Error",
