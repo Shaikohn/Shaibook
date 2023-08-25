@@ -27,6 +27,7 @@ import { DislikesSVGComponent } from './svg/dislikes-svg/dislikes-svg.component'
 import { EditSVGComponent } from './svg/edit-svg/edit-svg.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { GroupListComponent } from './components/group-list/group-list.component';
+import { GroupPageComponent } from './pages/group-page/group-page.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { GroupListComponent } from './components/group-list/group-list.component
     EditSVGComponent,
     ChatComponent,
     GroupListComponent,
+    GroupPageComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, SocialLoginModule, GoogleSigninButtonModule],
   providers: [AuthGuard,
