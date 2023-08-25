@@ -18,11 +18,12 @@
   </div>
   <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full ms-2" type="submit">Submit</button>
 </form>
+<app-group-list></app-group-list>
 <div *ngFor="let p of posts" class="flex justify-center items-center mt-4">
   <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">
     <div class="px-6 py-4">
-      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="deletePost(p.userId, p._id)">Delete</button>
-      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="setEditing(p)">Edit</button>
+      <button class="float-right" *ngIf="p.userId === localUser.result._id" (click)="deletePost(p.userId, p._id)"> <app-trash-svg></app-trash-svg> </button>
+      <button class="float-right" *ngIf="p.userId === localUser.result._id" (click)="setEditing(p)"> <app-edit-svg></app-edit-svg> </button>
       <div class="font-bold text-xl mb-2"> {{p.username}} </div>
         <p class="text-gray-700 text-base">
         {{p.text}}
@@ -31,6 +32,33 @@
     <div *ngFor="let photo of p.photos">
       <img class="w-full" [src]="photo" alt="photos">
     </div>
+    <div class="flex items-center">
+      <app-likes-svg></app-likes-svg>
+    {{p.likes}}
+    <app-dislikes-svg></app-dislikes-svg>
+    {{p.dislikes}}
+    <div class="ml-5">
+      <button *ngIf="p.userId !== user._id && !user.likes.includes(p._id) && !user.dislikes.includes(p._id)" (click)="addLike(p._id)" ><app-like-svg></app-like-svg></button>
+      <button (click)="deleteLike(p._id)" *ngIf="user.likes.includes(p._id)"><app-delete-like-svg></app-delete-like-svg></button>
+      <button (click)="deleteDislike(p._id)" *ngIf="user.dislikes.includes(p._id)"><app-delete-dislike-svg></app-delete-dislike-svg></button>
+      <button class="pl-5" *ngIf="p.userId !== user._id && !user.dislikes.includes(p._id) && !user.likes.includes(p._id)" (click)="addDislike(p._id)" ><app-dislike-svg></app-dislike-svg></button>
+      <button class="pl-5" (click)="setViewingComments(p.comments)"><app-comment-svg></app-comment-svg></button>
+    </div>
+    </div>
+    <form [formGroup]="commentData" (submit)="addComment(p._id)" class="flex">
+      <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Write your comment" type="text" formControlName="text"></textarea>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md float-right" type="submit">Submit</button>
+    </form>
+    <!-- <div *ngFor="let c of p.comments" class="flex bg-red-500 p-2">
+      <img class="h-8 w-8 rounded-full mr-2" src="{{c.userPicture}}" >
+      <p> {{c.text}} </p>
+      <button class="ml-3" *ngIf="c.userId !== user._id && !user.likes.includes(c._id) && !user.dislikes.includes(c._id)" (click)="addCommentLike(c._id)" ><svg fill="#000000" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.57 487.57" xml:space="preserve" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M137.482,253.8c0.7-2,1.5-4.2,2.4-6.5l0,0l0,0c3.8-9.4,10.1-20.9,19.9-31.2c46-35.3,94.2-168,94.2-168s-7.5-48.1,15-48.1 s76,15,43.9,112.3c-32.1,97.4,0,82.4,0,82.4c7.4-1.7,14.2-3.1,20.7-4.2l0,0c0,0,92.7-20.8,126.9,10.5c27.4,25,6.1,58,6.1,58 s38.5,34.3-0.7,75.3c0,0,25.1,41.5-19,74.6c0,0,20.5,57.1-61.4,74.5c-24.1,5.1-54.4,4.9-83,2.7c-71.5,1.5-142.6-7.8-142.6-7.8 l-46-200.1C127.782,269.8,134.382,260.1,137.482,253.8z M4.182,281l-0.1,200h108.7c9.7,0,16-7.7,14-17.2l-34.8-165.6 c-2-9.5-11.5-17.2-21.2-17.2L4.182,281L4.182,281z"></path> </g> </g></svg></button>
+      <button (click)="deleteCommentLike(c._id)" *ngIf="user.likes.includes(c._id)"> <svg fill="#1e780d" height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.57 487.57" xml:space="preserve" stroke="#1e780d"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M137.482,253.8c0.7-2,1.5-4.2,2.4-6.5l0,0l0,0c3.8-9.4,10.1-20.9,19.9-31.2c46-35.3,94.2-168,94.2-168s-7.5-48.1,15-48.1 s76,15,43.9,112.3c-32.1,97.4,0,82.4,0,82.4c7.4-1.7,14.2-3.1,20.7-4.2l0,0c0,0,92.7-20.8,126.9,10.5c27.4,25,6.1,58,6.1,58 s38.5,34.3-0.7,75.3c0,0,25.1,41.5-19,74.6c0,0,20.5,57.1-61.4,74.5c-24.1,5.1-54.4,4.9-83,2.7c-71.5,1.5-142.6-7.8-142.6-7.8 l-46-200.1C127.782,269.8,134.382,260.1,137.482,253.8z M4.182,281l-0.1,200h108.7c9.7,0,16-7.7,14-17.2l-34.8-165.6 c-2-9.5-11.5-17.2-21.2-17.2L4.182,281L4.182,281z"></path> </g> </g></svg> </button>
+      <button (click)="deleteCommentDislike(c._id)" *ngIf="user.dislikes.includes(c._id)"> <svg fill="#db0000" height="30px" width="30px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.57 487.57" xml:space="preserve" stroke="#db0000" transform="rotate(180)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M137.482,253.8c0.7-2,1.5-4.2,2.4-6.5l0,0l0,0c3.8-9.4,10.1-20.9,19.9-31.2c46-35.3,94.2-168,94.2-168s-7.5-48.1,15-48.1 s76,15,43.9,112.3c-32.1,97.4,0,82.4,0,82.4c7.4-1.7,14.2-3.1,20.7-4.2l0,0c0,0,92.7-20.8,126.9,10.5c27.4,25,6.1,58,6.1,58 s38.5,34.3-0.7,75.3c0,0,25.1,41.5-19,74.6c0,0,20.5,57.1-61.4,74.5c-24.1,5.1-54.4,4.9-83,2.7c-71.5,1.5-142.6-7.8-142.6-7.8 l-46-200.1C127.782,269.8,134.382,260.1,137.482,253.8z M4.182,281l-0.1,200h108.7c9.7,0,16-7.7,14-17.2l-34.8-165.6 c-2-9.5-11.5-17.2-21.2-17.2L4.182,281L4.182,281z"></path> </g> </g></svg> </button>
+      <button class="ml-3" *ngIf="c.userId !== user._id && !user.dislikes.includes(c._id) && !user.likes.includes(c._id)" (click)="addCommentDislike(c._id)" > <svg fill="#000000" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.57 487.57" xml:space="preserve" stroke="#000000" transform="rotate(180)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M137.482,253.8c0.7-2,1.5-4.2,2.4-6.5l0,0l0,0c3.8-9.4,10.1-20.9,19.9-31.2c46-35.3,94.2-168,94.2-168s-7.5-48.1,15-48.1 s76,15,43.9,112.3c-32.1,97.4,0,82.4,0,82.4c7.4-1.7,14.2-3.1,20.7-4.2l0,0c0,0,92.7-20.8,126.9,10.5c27.4,25,6.1,58,6.1,58 s38.5,34.3-0.7,75.3c0,0,25.1,41.5-19,74.6c0,0,20.5,57.1-61.4,74.5c-24.1,5.1-54.4,4.9-83,2.7c-71.5,1.5-142.6-7.8-142.6-7.8 l-46-200.1C127.782,269.8,134.382,260.1,137.482,253.8z M4.182,281l-0.1,200h108.7c9.7,0,16-7.7,14-17.2l-34.8-165.6 c-2-9.5-11.5-17.2-21.2-17.2L4.182,281L4.182,281z"></path> </g> </g></svg> </button>
+      <button *ngIf="c.userId === user._id || p.userId === user._id" (click)="deleteComment(c._id, p._id)" > <svg width="40px" height="40px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M667.8 362.1H304V830c0 28.2 23 51 51.3 51h312.4c28.4 0 51.4-22.8 51.4-51V362.2h-51.3z" fill="#CCCCCC" /><path d="M750.3 295.2c0-8.9-7.6-16.1-17-16.1H289.9c-9.4 0-17 7.2-17 16.1v50.9c0 8.9 7.6 16.1 17 16.1h443.4c9.4 0 17-7.2 17-16.1v-50.9z" fill="#CCCCCC" /><path d="M733.3 258.3H626.6V196c0-11.5-9.3-20.8-20.8-20.8H419.1c-11.5 0-20.8 9.3-20.8 20.8v62.3H289.9c-20.8 0-37.7 16.5-37.7 36.8V346c0 18.1 13.5 33.1 31.1 36.2V830c0 39.6 32.3 71.8 72.1 71.8h312.4c39.8 0 72.1-32.2 72.1-71.8V382.2c17.7-3.1 31.1-18.1 31.1-36.2v-50.9c0.1-20.2-16.9-36.8-37.7-36.8z m-293.5-41.5h145.3v41.5H439.8v-41.5z m-146.2 83.1H729.5v41.5H293.6v-41.5z m404.8 530.2c0 16.7-13.7 30.3-30.6 30.3H355.4c-16.9 0-30.6-13.6-30.6-30.3V382.9h373.6v447.2z" fill="#211F1E" /><path d="M511.6 798.9c11.5 0 20.8-9.3 20.8-20.8V466.8c0-11.5-9.3-20.8-20.8-20.8s-20.8 9.3-20.8 20.8v311.4c0 11.4 9.3 20.7 20.8 20.7zM407.8 798.9c11.5 0 20.8-9.3 20.8-20.8V466.8c0-11.5-9.3-20.8-20.8-20.8s-20.8 9.3-20.8 20.8v311.4c0.1 11.4 9.4 20.7 20.8 20.7zM615.4 799.6c11.5 0 20.8-9.3 20.8-20.8V467.4c0-11.5-9.3-20.8-20.8-20.8s-20.8 9.3-20.8 20.8v311.4c0 11.5 9.3 20.8 20.8 20.8z" fill="#211F1E" /></svg> </button>
+      <hr>
+    </div> -->
   </div>
   <section class="modal" [ngClass]="{'is-open': editing === true}">
     <div class='modal-container'>
@@ -57,6 +85,23 @@
         <button style="margin-left: 60px" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
       </form>
       <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setEditing(p)">Cancel</button>
+    </div>
+  </section>
+  <section class="modal" [ngClass]="{'is-open': viewingComments === true}">
+    <div class='modal-container'>
+      <h1>COMMENTS</h1>
+      <div *ngFor="let c of comments" class="flex bg-red-500 p-2">
+        {{c.username}}
+        <img class="h-8 w-8 rounded-full mr-2" src="{{c.userPicture}}" >
+        <p> {{c.text}} </p>
+        <button class="ml-3" *ngIf="c.userId !== user._id && !user.likes.includes(c._id) && !user.dislikes.includes(c._id)" (click)="addCommentLike(c._id)" > <app-like-svg></app-like-svg> </button>
+        <button (click)="deleteCommentLike(c._id)" *ngIf="user.likes.includes(c._id)"> <app-delete-like-svg></app-delete-like-svg> </button>
+        <button (click)="deleteCommentDislike(c._id)" *ngIf="user.dislikes.includes(c._id)"> <app-delete-dislike-svg></app-delete-dislike-svg> </button>
+        <button class="ml-3" *ngIf="c.userId !== user._id && !user.dislikes.includes(c._id) && !user.likes.includes(c._id)" (click)="addCommentDislike(c._id)" > <app-dislike-svg></app-dislike-svg> </button>
+        <button *ngIf="c.userId === user._id || p.userId === user._id" (click)="deleteComment(c._id, p._id)" > <app-trash-svg></app-trash-svg> </button>
+        <hr>
+      </div>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setViewingComments(p.comments)">Cancel</button>
     </div>
   </section>
 </div>

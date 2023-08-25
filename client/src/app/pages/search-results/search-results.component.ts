@@ -22,6 +22,7 @@ export class SearchResultsComponent implements OnInit {
     .subscribe(
       res => {
         this.users = res
+        console.log(this.users)
       },
       err => console.log(err)
     )

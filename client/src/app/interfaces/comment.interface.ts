@@ -1,12 +1,12 @@
-export interface Post {
+export interface Comment {
   _id:      string;
   text:     string;
   username:     string;
+  userPicture:     string;
+  postId:   string;
+  userId:   string;
   likes:    number;
   dislikes: number;
-  comments: any[];
-  photos:   string[];
-  userId:   string;
 }
 
 export interface ID {

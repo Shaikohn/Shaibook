@@ -16,6 +16,17 @@ import { PostComponent } from './components/post/post.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SearchResultsComponent } from './pages/search-results/search-results.component';
 import { SearchedUserComponent } from './pages/searched-user/searched-user.component';
+import { CommentSVGComponent } from './svg/comment-svg/comment-svg.component';
+import { LikeSVGComponent } from './svg/like-svg/like-svg.component';
+import { DislikeSVGComponent } from './svg/dislike-svg/dislike-svg.component';
+import { DeleteDislikeSVGComponent } from './svg/delete-dislike-svg/delete-dislike-svg.component';
+import { DeleteLikeSVGComponent } from './svg/delete-like-svg/delete-like-svg.component';
+import { TrashSVGComponent } from './svg/trash-svg/trash-svg.component';
+import { LikesSVGComponent } from './svg/likes-svg/likes-svg.component';
+import { DislikesSVGComponent } from './svg/dislikes-svg/dislikes-svg.component';
+import { EditSVGComponent } from './svg/edit-svg/edit-svg.component';
+import { ChatComponent } from './pages/chat/chat.component';
+import { GroupListComponent } from './components/group-list/group-list.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +38,17 @@ import { SearchedUserComponent } from './pages/searched-user/searched-user.compo
     ProfileComponent,
     SearchResultsComponent,
     SearchedUserComponent,
+    CommentSVGComponent,
+    LikeSVGComponent,
+    DislikeSVGComponent,
+    DeleteDislikeSVGComponent,
+    DeleteLikeSVGComponent,
+    TrashSVGComponent,
+    LikesSVGComponent,
+    DislikesSVGComponent,
+    EditSVGComponent,
+    ChatComponent,
+    GroupListComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule, HttpClientModule, SocialLoginModule, GoogleSigninButtonModule],
   providers: [AuthGuard,

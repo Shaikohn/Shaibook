@@ -25,6 +25,7 @@ export class LandingPageComponent implements OnInit {
     email: new FormControl('', /* [Validators.email] */),
     password: new FormControl(''/* , [Validators.minLength(4)] */),
     confirmPassword: new FormControl(''/* , [Validators.minLength(4)] */),
+    picture: new FormControl(''/* , [Validators.minLength(4)] */),
   })
 
   setLogin() {
@@ -33,10 +34,10 @@ export class LandingPageComponent implements OnInit {
 
   signUp() {
     if(this.userData.status === "VALID") {
+      this.userData.value.picture = "../../../assets/userIcon.png"
       this.authService.signUp(this.userData.value)
     .subscribe(
       res => {
-        console.log('res', res)
         localStorage.setItem('user', JSON.stringify(res))
         this.router.navigate(['/home'])
       },
@@ -57,7 +58,6 @@ export class LandingPageComponent implements OnInit {
       this.authService.signIn(this.userData.value)
     .subscribe(
       res => {
-        console.log(res)
         localStorage.setItem('user', JSON.stringify(res))
         this.router.navigate(['/home'])
       },

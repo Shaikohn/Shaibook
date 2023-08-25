@@ -1,26 +1,31 @@
 <app-navbar></app-navbar>
-<div class="flex flex-row justify-center items-center bg-red-200 m-auto">
+<div style="margin-left: 200px; margin-top: 100px; position: fixed; width: 350px;" class="flex flex-col rounded-full justify-center items-center bg-red-200">
   <img style="border-radius: 50px; height: 100px; margin-right: 10px; padding: 10px; width: 100px;" [src]="user.picture" alt="{{user.name}}" referrerpolicy="no-referrer">
   Username: {{user.username}}
   <br>
   Name: {{user.name}}
   <br>
-  Email: {{user.email}}
+  <p>Email: {{user.email}}</p>
   <br>
-  Privacity: {{user.public ? "Public" : "Private"}}
-  <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="editPrivacity()">Privacity</button>
-  <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" (click)="setEditing()">Edit</button>
+  <p>Posts: {{user?.posts?.length}}</p>
+  <p>Followers: {{user?.followers?.length}}</p>
+  <p>Followed: {{user?.followed?.length}}</p>
+  <div class="flex flex-row">
+    <p>Privacity: {{user.public ? "Public" : "Private"}}</p>
+    <button class="ml-2" (click)="editPrivacity()">(Change)</button>
+  </div>
+  <button class="mb-3 mt-2" (click)="setEditing()"> <app-edit-svg></app-edit-svg> </button>
 </div>
 <div *ngFor="let f of user.followRequests">
   {{f.username}}
   <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" (click)="acceptFollowRequest(f._id)">Accept</button>
   <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">Reject</button>
 </div>
-<div *ngFor="let p of user.posts" class="flex justify-center items-center mt-4">
+<div style="margin-left: 800px" *ngFor="let p of user.posts" class="flex mt-4">
   <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">
     <div class="px-6 py-4">
-      <!-- <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="deletePost(p.userId, p._id)">Delete</button>
-      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right" *ngIf="p.userId === localUser.result._id" (click)="setEditing(p)">Edit</button> -->
+      <button class="float-right" (click)="deletePost(p.userId, p._id)"> <app-trash-svg></app-trash-svg> </button>
+      <button class="float-right" (click)="setEditingPost(p)"> <app-edit-svg></app-edit-svg> </button>
       <div class="font-bold text-xl mb-2"> {{p.username}} </div>
         <p class="text-gray-700 text-base">
         {{p.text}}
@@ -29,10 +34,21 @@
     <div *ngFor="let photo of p.photos">
       <img class="w-full" [src]="photo" alt="photos">
     </div>
+    <div class="flex items-center justify-center">
+      <app-likes-svg></app-likes-svg>
+      {{p.likes}}
+      <app-dislikes-svg></app-dislikes-svg>
+      {{p.dislikes}}
+        <button class="pl-5" (click)="setViewingComments(p.comments)"><app-comment-svg></app-comment-svg></button>
+      </div>
+      <form [formGroup]="commentData" (submit)="addComment(p._id)" class="flex">
+        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Write your comment" type="text" formControlName="text"></textarea>
+        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md float-right" type="submit">Submit</button>
+      </form>
   </div>
   <section class="modal" [ngClass]="{'is-open': editing === true}">
     <div class='modal-container'>
-      <h1>EDIT YOUR POST</h1>
+      <h1>EDIT YOUR PROFILE</h1>
       <form *ngIf="editing === true" [formGroup]="profileData" (submit)="editProfile()" class="w-full max-w-lg">
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full px-3">
@@ -55,6 +71,50 @@
         <button style="margin-left: 60px" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
       </form>
       <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setEditing()">Cancel</button>
+    </div>
+  </section>
+  <section class="modal" [ngClass]="{'is-open': viewingComments === true}">
+    <div class='modal-container'>
+      <h1>COMMENTS</h1>
+      <div *ngFor="let c of comments" class="flex bg-red-500 p-2">
+        {{c.username}}
+        <img class="h-8 w-8 rounded-full mr-2" src="{{c.userPicture}}" >
+        <p> {{c.text}} </p>
+        <button class="ml-3" *ngIf="c.userId !== user._id && !user.likes.includes(c._id) && !user.dislikes.includes(c._id)" (click)="addCommentLike(c._id)" > <app-like-svg></app-like-svg> </button>
+        <button (click)="deleteCommentLike(c._id)" *ngIf="user.likes.includes(c._id)"> <app-delete-like-svg></app-delete-like-svg> </button>
+        <button (click)="deleteCommentDislike(c._id)" *ngIf="user.dislikes.includes(c._id)"> <app-delete-dislike-svg></app-delete-dislike-svg> </button>
+        <button class="ml-3" *ngIf="c.userId !== user._id && !user.dislikes.includes(c._id) && !user.likes.includes(c._id)" (click)="addCommentDislike(c._id)" > <app-dislike-svg></app-dislike-svg> </button>
+        <button (click)="deleteComment(c._id, p._id)" > <app-trash-svg></app-trash-svg> </button>
+        <hr>
+      </div>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setViewingComments(p.comments)">Cancel</button>
+    </div>
+  </section>
+  <section class="modal" [ngClass]="{'is-open': editingPost === true}">
+    <div class='modal-container'>
+      <h1>EDIT YOUR POST</h1>
+      <form *ngIf="editingPost === true" [formGroup]="editPostData" (submit)="editPost()" class="w-full max-w-lg">
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+              Text
+            </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Leave empty if you want it to stay the same" type="text" formControlName="text">
+            {{post.text}}
+          </div>
+        </div>
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <div class="w-full px-3">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
+              Photos
+            </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Leave empty if you want it to stay the same" type="text" formControlName="photos">
+            {{post.photos}}
+          </div>
+        </div>
+        <button style="margin-left: 60px" type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">Confirm</button>
+      </form>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setEditingPost(p)">Cancel</button>
     </div>
   </section>
 </div>

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommentService } from 'src/app/services/comment.service';
+import { PostService } from 'src/app/services/post.service';
 import { ProfileService } from 'src/app/services/profile.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-searched-user',
@@ -15,11 +19,22 @@ export class SearchedUserComponent implements OnInit {
   pendingFollowRequest:boolean = false
   follower:boolean = false
 
-  constructor(private profileService: ProfileService, private route: ActivatedRoute) {}
+  viewingComments:boolean = false
+  comments:any = []
+
+  constructor(private profileService: ProfileService, private route: ActivatedRoute, private commentService: CommentService, private postService: PostService, private router: Router) {}
 
   ngOnInit(): void {
     this.getProfile()
   }
+
+  commentData = new FormGroup({
+    text: new FormControl(''),
+    username: new FormControl(''),
+    userId: new FormControl(''),
+    postId: new FormControl(''),
+    userPicture: new FormControl(''),
+  })
 
   getProfile() {
     this.route.params.subscribe(params => {
@@ -71,5 +86,181 @@ export class SearchedUserComponent implements OnInit {
     if(followers!== undefined) {
       this.follower = true
     }
+    if(this.localUser.result._id === this.user._id) {
+      this.router.navigate(['/profile'])
+    }
+  }
+
+  addComment(postId: string) {
+    this.commentData.value.userId = this.localUser.result._id
+    this.commentData.value.username = this.localUser.result.username
+    this.commentData.value.postId = postId
+    this.commentData.value.userPicture = this.localUser.result.picture
+    this.commentService.addComment(this.commentData.value)
+    .subscribe(
+      res => {
+        console.log('res', res)
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteComment(_id: string, postId: string) {
+    let userId = this.localUser.result._id
+    this.commentService.deleteComment(userId, _id, postId)
+    .subscribe(
+      res => {
+        console.log('res', res)
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  setViewingComments(p:Array<object>) {
+    this.viewingComments = !this.viewingComments
+    this.comments = []
+    this.comments = p
+  }
+
+  addLike(postId: string) {
+    this.localUser = JSON.parse(localStorage.getItem('user')!)
+    let _id = this.localUser.result._id
+    this.postService.addLike(_id, postId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  addDislike(postId: string) {
+    this.localUser = JSON.parse(localStorage.getItem('user')!)
+    let _id = this.localUser.result._id
+    this.postService.addDislike(_id, postId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteLike(postId: string) {
+    this.localUser = JSON.parse(localStorage.getItem('user')!)
+    let _id = this.localUser.result._id
+    this.postService.deleteLike(_id, postId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteDislike(postId: string) {
+    this.localUser = JSON.parse(localStorage.getItem('user')!)
+    let _id = this.localUser.result._id
+    this.postService.deleteDislike(_id, postId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  addCommentLike(commentId: string) {
+    let _id = this.localUser.result._id
+    this.commentService.addLike(_id, commentId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  addCommentDislike(commentId: string) {
+    let _id = this.localUser.result._id
+    this.commentService.addDislike(_id, commentId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteCommentLike(commentId: string) {
+    let _id = this.localUser.result._id
+    this.commentService.deleteLike(_id, commentId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
+  }
+
+  deleteCommentDislike(commentId: string) {
+    let _id = this.localUser.result._id
+    this.commentService.deleteDislike(_id, commentId)
+    .subscribe(
+      res => {
+        this.getProfile()
+      },
+      err => Swal.fire({
+        title: "Error",
+        text: err.error.message,
+        icon: "error",
+        timer: 2000,
+    })
+    )
   }
 }
