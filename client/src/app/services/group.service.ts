@@ -37,7 +37,24 @@ export class GroupService {
   deleteGroupPost(postId: string,userId: string, groupId: string) {
     return this.http.delete<Group[]>(this.groupUrl + `/delete/${groupId}/${userId}/${postId}`)
   }
+
   deleteGroup(_id: string) {
     return this.http.delete<Group[]>(this.groupUrl + `/delete/${_id}`)
+  }
+
+  followGroup(_id: string, groupId:string) {
+    return this.http.patch<Group[]>(this.groupUrl + `/follow/${_id}/${groupId}`, null)
+  }
+
+  acceptFollowRequest(_id: string, groupId:string) {
+    return this.http.patch<Group[]>(this.groupUrl + `/acceptRequest/${_id}/${groupId}`, null)
+  }
+
+  rejectFollowRequest(_id: string, groupId:string) {
+    return this.http.patch<Group[]>(this.groupUrl + `/rejectRequest/${_id}/${groupId}`, null)
+  }
+
+  unfollowGroup(_id: string, groupId:string) {
+    return this.http.patch<Group[]>(this.groupUrl + `/unfollow/${_id}/${groupId}`, null)
   }
 }

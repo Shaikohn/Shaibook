@@ -1,5 +1,78 @@
 <app-navbar></app-navbar>
+<ng-container *ngTemplateOutlet="group.public || follower ? Public : Private">
 
-<div>
+</ng-container>
 
-</div>
+<ng-template #Public>
+  <div style="margin-left: 200px; margin-top: 100px; position: fixed; width: 350px;" class="flex flex-col rounded-full justify-center items-center bg-red-200">
+    <img style="border-radius: 50px; height: 100px; margin-right: 10px; padding: 10px; width: 100px;" [src]="group.photo" alt="{{group.name}}" referrerpolicy="no-referrer">
+    Name: {{group.name}}
+    <br>
+    <p>Description: {{group.description}}</p>
+    <br>
+    <p>Posts: {{group?.posts?.length}}</p>
+    <p>Followers: {{group?.followers?.length}}</p>
+    <p>Followed: {{group?.followed?.length}}</p>
+    <button *ngIf="!follower" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right mb-3 mt-2" (click)="followGroup()">Seguir</button>
+    <button (click)="unfollowGroup()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full mb-3 mt-2" *ngIf="follower">Dejar de seguir</button>
+  </div>
+  <div style="margin-left: 800px" *ngFor="let p of group.posts" class="flex mt-4">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg bg-slate-100">
+      <div class="px-6 py-4">
+        <div class="font-bold text-xl mb-2"> {{p.username}} </div>
+          <p class="text-gray-700 text-base">
+          {{p.text}}
+          </p>
+      </div>
+      <div *ngFor="let photo of p.photos">
+        <img class="w-full" [src]="photo" alt="photos">
+      </div>
+      <div class="flex items-center">
+        <svg width="45px" height="45px" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0" transform="translate(3.120000000000001,3.120000000000001), scale(0.74)"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#58ca49" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#743939" stroke-width="0.9600000000000002"></g><g id="SVGRepo_iconCarrier"> <path d="M10.75 2.44995C11.44 1.85995 12.57 1.85995 13.27 2.44995L14.85 3.81005C15.15 4.07005 15.71 4.28002 16.11 4.28002H17.81C18.87 4.28002 19.74 5.14996 19.74 6.20996V7.91003C19.74 8.30003 19.95 8.87004 20.21 9.17004L21.57 10.75C22.16 11.44 22.16 12.57 21.57 13.27L20.21 14.85C19.95 15.15 19.74 15.71 19.74 16.11V17.8101C19.74 18.8701 18.87 19.74 17.81 19.74H16.11C15.72 19.74 15.15 19.95 14.85 20.21L13.27 21.5699C12.58 22.1599 11.45 22.1599 10.75 21.5699L9.17002 20.21C8.87002 19.95 8.31001 19.74 7.91001 19.74H6.18C5.12 19.74 4.25 18.8701 4.25 17.8101V16.1C4.25 15.71 4.04001 15.15 3.79001 14.85L2.44 13.26C1.86 12.57 1.86 11.45 2.44 10.76L3.79001 9.17004C4.04001 8.87004 4.25 8.31004 4.25 7.92004V6.20996C4.25 5.14996 5.12 4.28002 6.18 4.28002H7.91001C8.30001 4.28002 8.87002 4.07005 9.17002 3.81005L10.75 2.44995Z" stroke="#ffffff" stroke-width="0.792" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9.89001 14.82L11.34 15.94C11.53 16.13 11.95 16.22 12.23 16.22H14C14.56 16.22 15.17 15.8 15.31 15.24L16.43 11.82C16.66 11.17 16.24 10.6 15.54 10.6H13.67C13.39 10.6 13.16 10.3701 13.2 10.0401L13.43 8.54008C13.52 8.12008 13.24 7.65005 12.82 7.51005C12.45 7.37005 11.98 7.56 11.79 7.84L9.87 10.69" stroke="#ffffff" stroke-width="0.792" stroke-miterlimit="10"></path> <path d="M7.5 14.8199V10.24C7.5 9.57999 7.78 9.34998 8.44 9.34998H8.91C9.56 9.34998 9.85001 9.57999 9.85001 10.24V14.8199C9.85001 15.4699 9.57 15.71 8.91 15.71H8.44C7.78 15.71 7.5 15.4799 7.5 14.8199Z" stroke="#ffffff" stroke-width="0.792" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        {{p.likes}}
+        <svg width="45px" height="45px" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0" transform="translate(3.120000000000001,3.120000000000001), scale(0.74)"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#cc0000" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#743939" stroke-width="0.9600000000000002"></g><g id="SVGRepo_iconCarrier"> <path d="M10.75 2.44995C11.44 1.85995 12.57 1.85995 13.27 2.44995L14.85 3.81005C15.15 4.07005 15.71 4.28002 16.11 4.28002H17.81C18.87 4.28002 19.74 5.14996 19.74 6.20996V7.91003C19.74 8.30003 19.95 8.87004 20.21 9.17004L21.57 10.75C22.16 11.44 22.16 12.57 21.57 13.27L20.21 14.85C19.95 15.15 19.74 15.71 19.74 16.11V17.8101C19.74 18.8701 18.87 19.74 17.81 19.74H16.11C15.72 19.74 15.15 19.95 14.85 20.21L13.27 21.5699C12.58 22.1599 11.45 22.1599 10.75 21.5699L9.17002 20.21C8.87002 19.95 8.31001 19.74 7.91001 19.74H6.18C5.12 19.74 4.25 18.8701 4.25 17.8101V16.1C4.25 15.71 4.04001 15.15 3.79001 14.85L2.44 13.26C1.86 12.57 1.86 11.45 2.44 10.76L3.79001 9.17004C4.04001 8.87004 4.25 8.31004 4.25 7.92004V6.20996C4.25 5.14996 5.12 4.28002 6.18 4.28002H7.91001C8.30001 4.28002 8.87002 4.07005 9.17002 3.81005L10.75 2.44995Z" stroke="#ffffff" stroke-width="0.792" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9.89001 14.82L11.34 15.94C11.53 16.13 11.95 16.22 12.23 16.22H14C14.56 16.22 15.17 15.8 15.31 15.24L16.43 11.82C16.66 11.17 16.24 10.6 15.54 10.6H13.67C13.39 10.6 13.16 10.3701 13.2 10.0401L13.43 8.54008C13.52 8.12008 13.24 7.65005 12.82 7.51005C12.45 7.37005 11.98 7.56 11.79 7.84L9.87 10.69" stroke="#ffffff" stroke-width="0.792" stroke-miterlimit="10"></path> <path d="M7.5 14.8199V10.24C7.5 9.57999 7.78 9.34998 8.44 9.34998H8.91C9.56 9.34998 9.85001 9.57999 9.85001 10.24V14.8199C9.85001 15.4699 9.57 15.71 8.91 15.71H8.44C7.78 15.71 7.5 15.4799 7.5 14.8199Z" stroke="#ffffff" stroke-width="0.792" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        {{p.dislikes}}
+        <div class="ml-5">
+          <button *ngIf="p.userId !== localUser.result._id && !localUser.result.likes.includes(p._id) && !localUser.result.dislikes.includes(p._id)" (click)="addLike(p._id)" ><app-like-svg></app-like-svg></button>
+          <button (click)="deleteLike(p._id)" *ngIf="localUser.result.likes.includes(p._id)"><app-delete-like-svg></app-delete-like-svg></button>
+          <button (click)="deleteDislike(p._id)" *ngIf="localUser.result.dislikes.includes(p._id)"><app-delete-dislike-svg></app-delete-dislike-svg></button>
+          <button class="pl-5" *ngIf="p.userId !== localUser.result._id && !localUser.result.dislikes.includes(p._id) && !localUser.result.likes.includes(p._id)" (click)="addDislike(p._id)" ><app-dislike-svg></app-dislike-svg></button>
+          <button class="pl-5" (click)="setViewingComments(p.comments)"><app-comment-svg></app-comment-svg></button>
+        </div>
+        </div>
+        <form [formGroup]="commentData" (submit)="addComment(p._id)" class="flex">
+          <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Write your comment" type="text" formControlName="text"></textarea>
+          <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md float-right" type="submit">Submit</button>
+        </form>
+    </div>
+    <section class="modal" [ngClass]="{'is-open': viewingComments === true}">
+      <div class='modal-container'>
+        <h1>COMMENTS</h1>
+        <div *ngFor="let c of comments" class="flex bg-red-500 p-2">
+          <div>
+            <img class="h-8 w-8 rounded-full mr-2" src="{{c.userPicture}}" >
+            <p>{{c.username}}</p>
+          </div>
+          <p> {{c.text}} </p>
+          <button class="ml-3" *ngIf="c.userId !== localUser._id && !localUser.likes.includes(c._id) && !localUser.dislikes.includes(c._id)" (click)="addCommentLike(c._id)" > <app-like-svg></app-like-svg> </button>
+          <button (click)="deleteCommentLike(c._id)" *ngIf="localUser.likes.includes(c._id)"> <app-delete-like-svg></app-delete-like-svg> </button>
+          <button (click)="deleteCommentDislike(c._id)" *ngIf="localUser.dislikes.includes(c._id)"> <app-delete-dislike-svg></app-delete-dislike-svg> </button>
+          <button class="ml-3" *ngIf="c.userId !== localUser._id && !localUser.dislikes.includes(c._id) && !localUser.likes.includes(c._id)" (click)="addCommentDislike(c._id)" > <app-dislike-svg></app-dislike-svg> </button>
+          <button *ngIf="c.userId === localUser.result._id || p.userId === localUser.result._id" (click)="deleteComment(c._id, p._id)" > <app-trash-svg></app-trash-svg> </button>
+          <hr>
+        </div>
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" (click)="setViewingComments(p.comments)">Close</button>
+      </div>
+    </section>
+  </div>
+</ng-template>
+
+<ng-template #Private>
+  <div style="margin-top: 170px; width: 350px;" class="flex flex-col rounded-full justify-center items-center bg-red-200 m-auto">
+    <img style="border-radius: 50px; height: 100px; margin-right: 10px; padding: 10px; width: 100px;" [src]="group.photo" alt="{{group.name}}" referrerpolicy="no-referrer">
+    {{group.name}}
+    <h1>Private group</h1>
+  <button *ngIf="!pendingFollowRequest" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full float-right mt-2 mb-3" (click)="followGroup()">Follow</button>
+  <p class="mb-3 mt-2" *ngIf="pendingFollowRequest">Esperando respuesta</p>
+  </div>
+</ng-template>
